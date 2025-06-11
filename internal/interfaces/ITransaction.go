@@ -8,13 +8,22 @@ import (
 )
 
 type ITransactionRepository interface {
-	CreateTransaction(ctx context.Context, trx *models.Transaction) error
+	CreateTransaction(context.Context, *models.Transaction) error
+	UpdateStatusTransaction(context.Context, string, string, string) error
+	GetTransactionByReference(context.Context, string, bool) (models.Transaction, error)
+	GetTransaction(ctx context.Context, userID uint) ([]models.Transaction, error)
 }
 
 type ITransactionService interface {
-	CreateTransaction(ctx context.Context, req *models.Transaction) (models.CreateTransactionResponse, error)
+	CreateTransaction(context.Context, *models.Transaction) (models.CreateTransactionResponse, error)
+	UpdateStatusTransaction(ctx context.Context, tokenData models.TokenData, req *models.UpdateStatusTransaction) error
+	GetTransaction(ctx context.Context, userID uint) ([]models.Transaction, error)
+	GetTransactionDetail(ctx context.Context, reference string) (models.Transaction, error)
 }
 
 type ITransactionHandler interface {
-	Create(c *gin.Context)
+	Create(*gin.Context)
+	UpdateStatusTransaction(c *gin.Context)
+	GetTransaction(c *gin.Context)
+	GetTransactionDetail(c *gin.Context)
 }
