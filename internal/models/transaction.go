@@ -39,7 +39,18 @@ type UpdateStatusTransaction struct {
 	AdditionalInfo    string `json:"additional_info"`
 }
 
+type RefundTransaction struct {
+	Reference      string `json:"reference" valid:"required"`
+	Description    string `json:"description" valid:"required"`
+	AdditionalInfo string `json:"additional_info"`
+}
+
 func (t UpdateStatusTransaction) Validate() error {
+	v := validator.New()
+	return v.Struct(t)
+}
+
+func (t RefundTransaction) Validate() error {
 	v := validator.New()
 	return v.Struct(t)
 }
