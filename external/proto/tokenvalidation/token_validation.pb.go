@@ -122,6 +122,7 @@ type UserData struct {
 	UserId        int64                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	Username      string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
 	FullName      string                 `protobuf:"bytes,3,opt,name=full_name,json=fullName,proto3" json:"full_name,omitempty"`
+	Email         string                 `protobuf:"bytes,4,opt,name=email,proto3" json:"email,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -177,6 +178,13 @@ func (x *UserData) GetFullName() string {
 	return ""
 }
 
+func (x *UserData) GetEmail() string {
+	if x != nil {
+		return x.Email
+	}
+	return ""
+}
+
 var File_token_validation_proto protoreflect.FileDescriptor
 
 const file_token_validation_proto_rawDesc = "" +
@@ -186,11 +194,12 @@ const file_token_validation_proto_rawDesc = "" +
 	"\x05token\x18\x01 \x01(\tR\x05token\"X\n" +
 	"\rTokenResponse\x12\x18\n" +
 	"\amessage\x18\x01 \x01(\tR\amessage\x12-\n" +
-	"\x04data\x18\x02 \x01(\v2\x19.tokenvalidation.UserDataR\x04data\"\\\n" +
+	"\x04data\x18\x02 \x01(\v2\x19.tokenvalidation.UserDataR\x04data\"r\n" +
 	"\bUserData\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\x03R\x06userId\x12\x1a\n" +
 	"\busername\x18\x02 \x01(\tR\busername\x12\x1b\n" +
-	"\tfull_name\x18\x03 \x01(\tR\bfullName2a\n" +
+	"\tfull_name\x18\x03 \x01(\tR\bfullName\x12\x14\n" +
+	"\x05email\x18\x04 \x01(\tR\x05email2a\n" +
 	"\x0fTokenValidation\x12N\n" +
 	"\rValidateToken\x12\x1d.tokenvalidation.TokenRequest\x1a\x1e.tokenvalidation.TokenResponseB\x13Z\x11./tokenvalidationb\x06proto3"
 

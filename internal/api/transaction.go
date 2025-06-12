@@ -165,7 +165,7 @@ func (api *TransactionAPI) UpdateStatusTransaction(c *gin.Context) {
 		return
 	}
 
-	helpers.SendResponseHTTP(c, http.StatusCreated, constants.SuccessMessage, nil)
+	helpers.SendResponseHTTP(c, http.StatusOK, constants.SuccessMessage, nil)
 }
 
 func (api *TransactionAPI) RefundTransaction(c *gin.Context) {

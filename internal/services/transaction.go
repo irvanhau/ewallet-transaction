@@ -144,6 +144,9 @@ func (s *TransactionService) UpdateStatusTransaction(ctx context.Context, tokenD
 		return errors.Wrap(err, "failed to update status transaction")
 	}
 
+	trx.TransactionStatus = req.TransactionStatus
+	s.sendNotification(ctx, tokenData, trx)
+
 	return nil
 }
 
@@ -186,8 +189,45 @@ func (s *TransactionService) RefundTransaction(ctx context.Context, tokenData mo
 		return resp, errors.Wrap(err, "failed to create new transaction refund")
 	}
 
+	s.External.SendNotification(ctx, tokenData.Email, "refund", map[string]string{
+		"full_name":   tokenData.FullName,
+		"description": trx.Description,
+		"reference":   trx.Reference,
+		"date":        trx.CreatedAt.Format("2006-01-02 15:04:05"),
+	})
+
 	resp.Reference = refundReference
 	resp.TransactionStatus = transaction.TransactionStatus
 
 	return resp, nil
+}
+
+func (s *TransactionService) sendNotification(ctx context.Context, tokenData models.TokenData, trx models.Transaction) {
+	var templateName string
+
+	switch trx.TransactionType {
+	case constants.TransactionTypeTopup:
+		if trx.TransactionStatus == constants.TransactionStatusSuccess {
+			templateName = "topup_success"
+		} else if trx.TransactionStatus == constants.TransactionStatusReversed {
+			templateName = "topup_reversed"
+		} else {
+			templateName = "topup_failed"
+		}
+	case constants.TransactionTypePurchase:
+		if trx.TransactionStatus == constants.TransactionStatusSuccess {
+			templateName = "purchase_success"
+		} else if trx.TransactionStatus == constants.TransactionStatusReversed {
+			templateName = "purchase_reversed"
+		} else {
+			templateName = "purchase_failed"
+		}
+	}
+
+	s.External.SendNotification(ctx, tokenData.Email, templateName, map[string]string{
+		"full_name":   tokenData.FullName,
+		"description": trx.Description,
+		"reference":   trx.Reference,
+		"date":        trx.CreatedAt.Format("2006-01-02 15:04:05"),
+	})
 }

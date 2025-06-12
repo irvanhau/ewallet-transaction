@@ -22,4 +22,5 @@ message UserData {
 	int64 user_id = 1;
 	string username = 2;
 	string full_name = 3;
+	string email = 4;
 }
